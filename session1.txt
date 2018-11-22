@@ -116,30 +116,49 @@ TID product_name price category
 1) Generate a RDD of tuples (tid, name, price, category) from this text file.
    The "tid" and "price" should be integers. You can use the function int() to convert a string to an integer (e.g., int("12") is 12).
 ******* answer 2.1: do not modify or remove this line
-   Replace by your answer
+txtProducts = sc.textFile("products.txt")
+def mapper(line):
+    splt = line.split()
+    return (int(splt[0]), splt[1], int(splt[2]), splt[3])
+
+txtProducts.map(mapper).collect()
 ******* end answer 2.1: do not modify or remove this line
 
 2) Generate a RDD with all products with price > 20.
 ******* answer 2.2
-   Replace by your answer
+txtProducts.map(mapper).filter(lambda x: x[2]>20).collect()
 ******* end answer 2.2
 
 
 3) Generate a RDD with the maximum price for each category of product.
 ******* answer 2.3
-   Replace by your answer
+def category_price_mapper(line):
+    splt = line.split()
+    return (splt[3], int(splt[2]))
+
+txtProducts.map(category_price_mapper).reduceByKey(max).collect()
 ******* end answer 2.3
 
 
 4) The number of products in each category
 ******* answer 2.4
-   Replace by your answer
+def category_count_mapper(line):
+    splt = line.split()
+    return (splt[3], 1)
+
+txtProducts.map(category_count_mapper).reduceByKey(lambda a, b: a+b).collect()
 ******* end answer 2.4
 
 
 5) The average price of products in each category.
 ******* answer 2.5
-   Replace by your answer
+def category_price_count_mapper(line):
+    splt = line.split()
+    return (splt[3], [int(splt[2]), 1])
+
+txtProducts.map(category_price_count_mapper)\
+    .reduceByKey(lambda a, b: [sum(x) for x in zip(a, b)])\
+    .map(lambda t: (t[0], t[1][0]/t[1][1])).collect()
 ******* end answer 2.5
 
 
