@@ -83,7 +83,7 @@ Do the "Basic" part on the "lotr.txt" text file (this text file is in the archiv
 2) Do the "more on RDD" operations using again the "lotr.txt" text file.
 
 3) Compute the list of (word, count) sorted by decreasing number of occurrences. What are the 5 most frequent words and their number of occurrences ?
-
+('the', 406), ('and', 383), ('of', 235), ('a', 207), ('to', 205)
 
 ********************************************************************************
 ************************* IMPORTANT ******************************************** 
