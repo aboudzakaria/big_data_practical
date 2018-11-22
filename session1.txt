@@ -179,12 +179,16 @@ In this part, you may also need operations union(), distinct() and intersect().
 1) Compute the union of A and B (First, you need to build RDDs for sets A
    and B)
 ******* answer 3.1
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: int(x)).distinct()
+B = sc.textFile("B.txt").map(lambda x: int(x)).distinct()
+A.union(B).distinct().collect()
 ******* end answer 3.1
 
 2) Compute the intersection of A and B:
 ******* answer 3.2
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: int(x)).distinct()
+B = sc.textFile("B.txt").map(lambda x: int(x)).distinct()
+A.intersection(B).collect()
 ******* end answer 3.2
 
 
@@ -194,13 +198,18 @@ In this part, you may also need operations union(), distinct() and intersect().
 3) Union (if an element appear a times in A and b times in B, it must
    appear a+b times in the union)
 ******* answer 3.3
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: int(x))
+B = sc.textFile("B.txt").map(lambda x: int(x))
+A.union(B).collect()
 ******* end answer 3.3
 
 4) Intersection (if an element appear a times in A and b times in B, it
    must appear min(a,b) times in the intersection)
 ******* answer 3.4
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: (int(x), (1, +1))).reduceByKey(lambda a, b: (a[0] + b[0], +1))
+B = sc.textFile("B.txt").map(lambda x: (int(x), (1, -1))).reduceByKey(lambda a, b: (a[0] + b[0], -1))
+I = A.union(B).reduceByKey(lambda a, b: (min(a[0],b[0]), a[1]+b[1])).filter(lambda x: x[1][1] == 0).map(lambda x: (x[0], x[1][0]))
+I.flatMap(lambda x: [x[0]] * x[1]).collect()
 ******* end answer 3.4
 
 For the following, it may be interesting to buid a RDD that contains
@@ -210,13 +219,23 @@ elements of the form (el, (a,b)) where "el" is an element of the multi-set,
 5) Difference (if an element appear a times in A and b times in B, it must
    appear max(0,a-b) times in the difference)
 ******* answer 3.5
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: (int(x), 1))
+B = sc.textFile("B.txt").map(lambda x: (int(x), -1))
+A = A.reduceByKey(lambda a, b: a+b)
+B = B.reduceByKey(lambda a, b: a+b)
+D = A.union(B).reduceByKey(lambda a, b: a+b).filter(lambda x: x[1] > 0)
+D.flatMap(lambda x: [x[0]] * x[1]).collect()
 ******* end answer 3.5
 
 6) Symmetric difference (if an element appear a times in A and b times in
    B, it must appear max(a,b) - min(a,b) in the symmetric difference)
 ******* answer 3.6
-   Replace by your answer
+A = sc.textFile("A.txt").map(lambda x: (int(x), 1))
+B = sc.textFile("B.txt").map(lambda x: (int(x), 1))
+A = A.reduceByKey(lambda a, b: a+b)
+B = B.reduceByKey(lambda a, b: a+b)
+SD = A.union(B).reduceByKey(lambda a, b: max(a,b) - min(a,b))
+SD.flatMap(lambda x: [x[0]] * x[1]).collect()
 ******* end answer 3.6
 
 
