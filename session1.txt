@@ -152,6 +152,17 @@ txtProducts.map(category_count_mapper).reduceByKey(lambda a, b: a+b).collect()
 
 5) The average price of products in each category.
 ******* answer 2.5
+def maper(x):
+    xx = x.split()
+    return ( xx[3], (1,int(xx[2])) )
+
+def reducer(a,b):
+    return ( a[0]+b[0] , (a[0]*a[1] + b[0]*b[1]) / (a[0]+b[0]) )
+
+txtProducts.map(maper).reduceByKey(reducer).map(lambda x: (x[0],x[1][1])).collect()
+
+# Another Solution:
+
 def category_price_count_mapper(line):
     splt = line.split()
     return (splt[3], [int(splt[2]), 1])
