@@ -8,8 +8,8 @@ complete this file with your answers and upload it in the "M2 CS Big data
 (BIG DATA)" course on Claroline connect.
 
 ****** Fill in the student names in your group in the next two lines: (do not modify or remove this line)
-- Firstname1 Lastname1
-- Firstname2 Lastname2
+- Abdul Rahman Zakarya
+- Muaz Twaty
 ****** end names (do not modify or remove this line)
 
 
