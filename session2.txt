@@ -57,7 +57,19 @@ To this aim, you can build one RDD for each vector and then use the "join" opera
 hint: you can use the int() and float() functions: int("5") is the integer 5 
 and float("5.4") is the float value 5.4.
 ******* answer 4.1: do not modify or remove this line
-   Replace by your answer
+def vecmap(line):
+    split = line.split()
+    return (int(split[0]), float(split[1]))
+
+V = sc.textFile("V.txt").map(vecmap)
+W = sc.textFile("W.txt").map(vecmap)
+
+def vecmult(X):
+    pairs = X[1]
+    return pairs[0] * pairs[1]
+
+VdotW = V.join(W).map(vecmult).reduce(lambda a,b: a+b)
+print(VdotW)
 ******* end answer 4.1: do not modify or remove this line
 
 
@@ -66,7 +78,9 @@ Compute the L2 norm of V and W.
 To use the sqrt function, you need to import it using (in the pyspark shell):
 from math import sqrt
 ******* answer 4.2: do not modify or remove this line
-   Replace by your answer
+import math
+L2V = math.sqrt(V.join(V).map(vecmult).reduce(lambda a,b: a+b))
+print(L2V)
 ******* end answer 4.2: do not modify or remove this line
 
 
@@ -74,12 +88,26 @@ Now, we want to compute the matrix vector product M.V (which should also be repr
 
 3) Build a RDD which contains all the (non zero) products of the form M[i,j].Vj (you can use the "join" operation on RDDs). Your RDD may also contains other information such as row and/or column numbers.
 ******* answer 4.3: do not modify or remove this line
-   Replace by your answer
+def matmap(line):
+    split = line.split()
+    return (int(split[1]), (int(split[0]), float(split[2])))
+
+M = sc.textFile("M.txt").map(matmap)
+V = sc.textFile("V.txt").map(vecmap)
+
+def matvecmult(X):
+    row = X[1][0][0]
+    m = X[1][0][1]
+    v = X[1][1]
+    return (row, m * v)
+
+products = M.join(V).map(matvecmult)
+products.collect()
 ******* end answer 4.3: do not modify or remove this line
 
 4) From the previous RDD, build the RDD which contains the vector W=M.V. Recall that zero values must not appear in this RDD.
 ******* answer 4.4: do not modify or remove this line
-   Replace by your answer
+products.reduceByKey(lambda a, b: a + b).collect()
 ******* end answer 4.4: do not modify or remove this line
 
 5) (optional) write a program that computes the largest eigenvalue of matrix M. 
